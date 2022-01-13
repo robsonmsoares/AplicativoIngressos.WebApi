@@ -9,6 +9,8 @@ namespace AplicacaoIngressos.WebApi.Dominio
         public string NomeCliente { get; private set; }
         public int Quantidade { get; private set; }
 
+        private Ingresso() { }
+
         public Ingresso(Guid id, Guid sessaoId, string nomeCliente, int quantidade)
         {
             Id = id;

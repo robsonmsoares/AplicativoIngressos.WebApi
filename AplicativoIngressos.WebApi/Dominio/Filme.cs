@@ -11,7 +11,7 @@ namespace AplicacaoIngressos.WebApi.Dominio
 
         private Filme() { }
 
-        private Filme(Guid id, string titulo, string duracao, string sinopse)
+        public Filme(Guid id, string titulo, string duracao, string sinopse)
         {
             Id = id;
             Titulo = titulo;

@@ -1,16 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using AplicacaoIngressos.WebApi.Hosting.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AplicacaoIngressos.WebApi.Infraestrutura;
+using Microsoft.EntityFrameworkCore;
 
 namespace AplicativoIngressos.WebApi
 {
@@ -28,6 +23,15 @@ namespace AplicativoIngressos.WebApi
         {
 
             services.AddControllers();
+            services.AddScoped<FilmesRepositorio>();
+            services.AddScoped<SessoesRepositorio>();
+            services.AddScoped<IngressosRepositorio>();
+            services.AddDapper();
+            services.AddDbContext<IngressosDbContext>(
+                o =>
+                {
+                    o.UseSqlServer("name=ConnectionStrings:Ingressos");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
