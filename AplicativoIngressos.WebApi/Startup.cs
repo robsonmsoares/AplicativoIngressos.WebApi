@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using AplicacaoIngressos.WebApi.Infraestrutura;
 using Microsoft.EntityFrameworkCore;
 
-namespace AplicativoIngressos.WebApi
+namespace AplicacaoIngressos.WebApi
 {
     public class Startup
     {
