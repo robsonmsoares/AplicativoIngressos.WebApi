@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using CSharpFunctionalExtensions;
 
 namespace AplicacaoIngressos.WebApi.Dominio
 {
@@ -17,6 +22,13 @@ namespace AplicacaoIngressos.WebApi.Dominio
             Titulo = titulo;
             Duracao = duracao;
             Sinopse = sinopse;
+        }
+
+        public static Result<Filme> Criar(string titulo, string duracao, string sinopse)
+        {
+            if (string.IsNullOrEmpty(titulo))
+                return Result.Failure<Filme>("Título deve ser preenchido");
+            return new Filme(Guid.NewGuid(), titulo, duracao, sinopse);
         }
     }
 }

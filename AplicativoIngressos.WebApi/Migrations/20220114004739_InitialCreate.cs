@@ -42,6 +42,7 @@ namespace AplicacaoIngressos.WebApi.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FilmeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HorarioInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     QuantidadeLugares = table.Column<int>(type: "int", nullable: false),
                     Preco = table.Column<double>(type: "float", nullable: false)
                 },

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AplicacaoIngressos.WebApi.Migrations
 {
     [DbContext(typeof(IngressosDbContext))]
-    [Migration("20220113172454_InitialCreate")]
+    [Migration("20220114004739_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,6 +72,9 @@ namespace AplicacaoIngressos.WebApi.Migrations
 
                     b.Property<Guid>("FilmeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("Preco")
                         .HasColumnType("float");

@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using CSharpFunctionalExtensions;
 
 namespace AplicacaoIngressos.WebApi.Dominio
 {
@@ -17,6 +22,11 @@ namespace AplicacaoIngressos.WebApi.Dominio
             SessaoId = sessaoId;
             NomeCliente = nomeCliente;
             Quantidade = quantidade;
+        }
+
+        public static Result<Ingresso> Criar(Guid sessaoId, string nomeCliente, int quantidade)
+        {
+            return new Ingresso(Guid.NewGuid(), sessaoId, nomeCliente, quantidade);
         }
     }
 }

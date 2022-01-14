@@ -71,6 +71,9 @@ namespace AplicacaoIngressos.WebApi.Migrations
                     b.Property<Guid>("FilmeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("datetime2");
+
                     b.Property<double>("Preco")
                         .HasColumnType("float");
 

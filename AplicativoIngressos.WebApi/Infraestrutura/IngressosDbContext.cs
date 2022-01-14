@@ -14,5 +14,12 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
         public DbSet<Filme> Filmes { get; set; }
         public DbSet<Sessao> Sessoes { get; set; }
         public DbSet<Ingresso> Ingressos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.ApplyConfiguration();
+            //modelBuilder.ApplyConfiguration();
+            //modelBuilder.ApplyConfiguration();
+        }
     }
 }
