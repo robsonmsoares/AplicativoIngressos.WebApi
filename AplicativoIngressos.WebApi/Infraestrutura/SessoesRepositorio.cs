@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AplicacaoIngressos.WebApi.Dominio;
@@ -15,19 +16,33 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
             _dbContext = dbContext;
         }
 
-        public async Task InserirAsync(Sessao novaSessao, CancellationToken cancellationToken = default)
-        {
-            await _dbContext.Sessoes.AddAsync(novaSessao, cancellationToken);
-        }
-
-        public async Task<Sessao> RecuperarPorIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Sessao> RecuperarPorId(Guid id, CancellationToken cancellationToken = default)
         {
             return await _dbContext
                             .Sessoes
                             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public async Task CommitAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Sessao>> RecuperarTodas(CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Sessoes.Include(c => c.Ingressos).ToListAsync(cancellationToken);
+        }
+
+        public async Task Inserir(Sessao novaSessao, CancellationToken cancellationToken = default)
+        {
+            await _dbContext.Sessoes.AddAsync(novaSessao, cancellationToken);
+        }
+
+        public void Atualizar(Sessao sessao)
+        {
+        }
+
+        public void Remover(Sessao removerSessao)
+        {
+            _dbContext.Sessoes.Remove(removerSessao);
+        }
+
+        public async Task Commit(CancellationToken cancellationToken = default)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

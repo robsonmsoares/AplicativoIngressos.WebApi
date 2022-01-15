@@ -1,34 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 using CSharpFunctionalExtensions;
+using AplicacaoIngressos.WebApi.Models;
 
 namespace AplicacaoIngressos.WebApi.Dominio
 {
     public sealed class Filme
     {
+        private IList<Sessao> _sessoes;
+
+        [Key]
         public Guid Id { get; private set; }
         public string Titulo { get; private set; }
         public string Duracao { get; private set; }
         public string Sinopse { get; private set; }
+        public IEnumerable<Sessao> Sessoes => _sessoes;
 
-        private Filme() { }
+        private Filme() 
+        { 
+        }
 
-        public Filme(Guid id, string titulo, string duracao, string sinopse)
+        public Filme(Guid id, string titulo, string duracao, string sinopse, List<Sessao> sessoes)
         {
             Id = id;
             Titulo = titulo;
             Duracao = duracao;
             Sinopse = sinopse;
+            _sessoes = sessoes;
         }
 
-        public static Result<Filme> Criar(string titulo, string duracao, string sinopse)
+        public static Result<Filme> Criar(NovoFilmeInputModel novoFilmeInputModel)
         {
-            if (string.IsNullOrEmpty(titulo))
-                return Result.Failure<Filme>("Título deve ser preenchido");
-            return new Filme(Guid.NewGuid(), titulo, duracao, sinopse);
+            var novoFilme = new Filme(Guid.NewGuid(), novoFilmeInputModel.Titulo, novoFilmeInputModel.Duracao, 
+                novoFilmeInputModel.Sinopse, new List<Sessao>());
+
+            return novoFilme;
+        }
+
+        public void Atualizar(AtualizarFilmeInputModel atualizarFilmeinputModel)
+        {
+            Titulo = atualizarFilmeinputModel.Titulo;
+            Duracao = atualizarFilmeinputModel.Duracao;
+            Sinopse = atualizarFilmeinputModel.Sinopse;
         }
     }
 }

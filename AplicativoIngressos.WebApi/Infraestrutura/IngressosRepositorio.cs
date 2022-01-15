@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AplicacaoIngressos.WebApi.Dominio;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace AplicacaoIngressos.WebApi.Infraestrutura
 {
@@ -14,19 +15,25 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
         {
             _dbContext = dbContext;
         }
-        public async Task InserirAsync(Ingresso novoIngresso, CancellationToken cancellationToken = default)
+
+        public async Task<Ingresso> RecuperarPorId(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext
+                            .Ingressos
+                            .FirstOrDefaultAsync(ingresso => ingresso.Id == id, cancellationToken);
+        }
+
+        public async Task<IEnumerable<Ingresso>> RecuperarTodos(CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Ingressos.ToListAsync(cancellationToken);
+        }
+
+        public async Task Inserir(Ingresso novoIngresso, CancellationToken cancellationToken = default)
         {
             await _dbContext.Ingressos.AddAsync(novoIngresso, cancellationToken);
         }
 
-        public async Task<Ingresso> RecuperarPorIdAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            return await _dbContext
-                            .Ingressos
-                            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-        }
-
-        public async Task CommitAsync(CancellationToken cancellationToken = default)
+        public async Task Commit(CancellationToken cancellationToken = default)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AplicacaoIngressos.WebApi.Dominio;
-using Microsoft.EntityFrameworkCore;
 
 namespace AplicacaoIngressos.WebApi.Infraestrutura
 {
@@ -15,19 +16,33 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
             _dbContext = dbContext;
         }
 
-        public async Task InserirAsync(Filme novoFilme, CancellationToken cancellationToken = default)
+        public async Task<Filme> RecuperarPorId(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext
+                            .Filmes
+                            .FirstOrDefaultAsync(filme => filme.Id == id, cancellationToken);
+        }
+
+        public async Task<IEnumerable<Filme>> RecuperarTodos(CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Filmes.Include(filme => filme.Sessoes).ToListAsync(cancellationToken);
+        }
+
+        public async Task Inserir(Filme novoFilme, CancellationToken cancellationToken = default)
         {
             await _dbContext.Filmes.AddAsync(novoFilme, cancellationToken);
         }
 
-        public async Task<Filme> RecuperarPorIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public void Atualizar(Filme filme)
         {
-            return await _dbContext
-                            .Filmes
-                            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public async Task CommitAsync(CancellationToken cancellationToken = default)
+        public void Remover(Filme removerFilme)
+        {
+            _dbContext.Filmes.Remove(removerFilme);
+        }
+
+        public async Task Commit(CancellationToken cancellationToken = default)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

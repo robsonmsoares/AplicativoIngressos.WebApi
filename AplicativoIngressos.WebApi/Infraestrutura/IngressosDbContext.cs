@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AplicacaoIngressos.WebApi.Dominio;
-using AplicacaoIngressos.WebApi.Infraestrutura.EntityConfigurations;
 
 namespace AplicacaoIngressos.WebApi.Infraestrutura
 {
@@ -17,9 +16,6 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration();
-            //modelBuilder.ApplyConfiguration();
-            //modelBuilder.ApplyConfiguration();
         }
     }
 }

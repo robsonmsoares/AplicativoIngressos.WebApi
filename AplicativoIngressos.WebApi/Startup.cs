@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using AplicacaoIngressos.WebApi.Hosting.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AplicacaoIngressos.WebApi.Infraestrutura;
-using Microsoft.EntityFrameworkCore;
 
 namespace AplicacaoIngressos.WebApi
 {
@@ -22,16 +21,17 @@ namespace AplicacaoIngressos.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
-            services.AddScoped<FilmesRepositorio>();
-            services.AddScoped<SessoesRepositorio>();
-            services.AddScoped<IngressosRepositorio>();
-            services.AddDapper();
             services.AddDbContext<IngressosDbContext>(
                 o =>
                 {
                     o.UseSqlServer("name=ConnectionStrings:Ingressos");
                 });
+
+            services.AddScoped<FilmesRepositorio>();
+            services.AddScoped<SessoesRepositorio>();
+            services.AddScoped<IngressosRepositorio>();
+
+            services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +45,8 @@ namespace AplicacaoIngressos.WebApi
             //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMvc();
 
             app.UseEndpoints(endpoints =>
             {

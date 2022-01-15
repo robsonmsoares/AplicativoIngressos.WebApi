@@ -56,6 +56,8 @@ namespace AplicacaoIngressos.WebApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SessaoId");
+
                     b.ToTable("Ingressos");
                 });
 
@@ -65,14 +67,11 @@ namespace AplicacaoIngressos.WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Data")
+                    b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("FilmeId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("HorarioInicio")
-                        .HasColumnType("datetime2");
 
                     b.Property<double>("Preco")
                         .HasColumnType("float");
@@ -82,7 +81,37 @@ namespace AplicacaoIngressos.WebApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FilmeId");
+
                     b.ToTable("Sessoes");
+                });
+
+            modelBuilder.Entity("AplicacaoIngressos.WebApi.Dominio.Ingresso", b =>
+                {
+                    b.HasOne("AplicacaoIngressos.WebApi.Dominio.Sessao", null)
+                        .WithMany("Ingressos")
+                        .HasForeignKey("SessaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AplicacaoIngressos.WebApi.Dominio.Sessao", b =>
+                {
+                    b.HasOne("AplicacaoIngressos.WebApi.Dominio.Filme", null)
+                        .WithMany("Sessoes")
+                        .HasForeignKey("FilmeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AplicacaoIngressos.WebApi.Dominio.Filme", b =>
+                {
+                    b.Navigation("Sessoes");
+                });
+
+            modelBuilder.Entity("AplicacaoIngressos.WebApi.Dominio.Sessao", b =>
+                {
+                    b.Navigation("Ingressos");
                 });
 #pragma warning restore 612, 618
         }

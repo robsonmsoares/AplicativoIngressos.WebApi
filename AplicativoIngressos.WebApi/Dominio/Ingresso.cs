@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using CSharpFunctionalExtensions;
 
 namespace AplicacaoIngressos.WebApi.Dominio
@@ -14,7 +10,9 @@ namespace AplicacaoIngressos.WebApi.Dominio
         public string NomeCliente { get; private set; }
         public int Quantidade { get; private set; }
 
-        private Ingresso() { }
+        private Ingresso() 
+        { 
+        }
 
         public Ingresso(Guid id, Guid sessaoId, string nomeCliente, int quantidade)
         {

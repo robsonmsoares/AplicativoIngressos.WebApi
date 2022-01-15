@@ -2,12 +2,11 @@
 
 namespace AplicacaoIngressos.WebApi.Models
 {
-    public sealed class NovoFilmeInputModel
+    public class AtualizarFilmeInputModel
     {
         [Required]
-        [MinLength(5, ErrorMessage = "Nome do filme deve ter no mínimo 5 caracteres")]
+        [MinLength(5, ErrorMessage = "Título do filme deve ter no mínimo 5 caracteres")]
         public string Titulo { get; set; }
-        [Required]
         public string Duracao { get; set; }
         public string Sinopse { get; set; }
     }
