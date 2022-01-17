@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AplicacaoIngressos.WebApi.Infraestrutura;
 using AplicacaoIngressos.WebApi.Dominio;
 using AplicacaoIngressos.WebApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace AplicacaoIngressos.WebApi.Controllers
 {
@@ -15,9 +16,11 @@ namespace AplicacaoIngressos.WebApi.Controllers
     {
         private readonly IngressosRepositorio _ingressosRepositorio;
         private readonly SessoesRepositorio _sessoesRepositorio;
+        private readonly ILogger<IngressosController> _logger;
 
-        public IngressosController(IngressosRepositorio ingressosRepositorio, SessoesRepositorio sessoesRepositorio)
+        public IngressosController(ILogger<IngressosController> logger, IngressosRepositorio ingressosRepositorio, SessoesRepositorio sessoesRepositorio)
         {
+            _logger = logger;
             _ingressosRepositorio = ingressosRepositorio;
             _sessoesRepositorio = sessoesRepositorio;
         }
@@ -66,10 +69,15 @@ namespace AplicacaoIngressos.WebApi.Controllers
 
             var novoIngresso = Ingresso.Criar(Guid.Parse(novoIngressoInputModel.SessaoId), novoIngressoInputModel.NomeCliente, novoIngressoInputModel.Quantidade);
             if (novoIngresso.IsFailure)
+            {
+                _logger.LogInformation($"Erro: {novoIngresso.Error}");
                 return BadRequest(novoIngresso.Error);
+            }
 
             await _ingressosRepositorio.Inserir(novoIngresso.Value, cancellationToken);
             await _ingressosRepositorio.Commit(cancellationToken);
+
+            _logger.LogInformation($"Ingresso {novoIngresso.Value.Id} vendido com sucesso");
 
             return CreatedAtAction("RecuperarPorId", new { id = novoIngresso.Value.Id }, novoIngresso.Value.Id);
         }

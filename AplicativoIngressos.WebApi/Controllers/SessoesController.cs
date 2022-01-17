@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AplicacaoIngressos.WebApi.Infraestrutura;
 using AplicacaoIngressos.WebApi.Dominio;
 using AplicacaoIngressos.WebApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace AplicacaoIngressos.WebApi.Controllers
 {
@@ -15,9 +16,11 @@ namespace AplicacaoIngressos.WebApi.Controllers
     {
         private readonly SessoesRepositorio _sessoesRepositorio;
         private readonly FilmesRepositorio _filmesRepositorio;
+        private readonly ILogger<SessoesController> _logger;
 
-        public SessoesController(SessoesRepositorio sessoesRepositorio, FilmesRepositorio filmesRepositorio)
+        public SessoesController(ILogger<SessoesController> logger, SessoesRepositorio sessoesRepositorio, FilmesRepositorio filmesRepositorio)
         {
+            _logger = logger;
             _sessoesRepositorio = sessoesRepositorio;
             _filmesRepositorio = filmesRepositorio;
         }
@@ -67,10 +70,15 @@ namespace AplicacaoIngressos.WebApi.Controllers
                 novaSessaoInputModel.QuantidadeLugares, novaSessaoInputModel.Preco);
 
             if (sessao.IsFailure)
+            {
+                _logger.LogInformation($"Erro: {sessao.Error}");
                 return BadRequest(sessao.Error);
+            }
 
             await _sessoesRepositorio.Inserir(sessao.Value, cancellationToken);
             await _sessoesRepositorio.Commit(cancellationToken);
+
+            _logger.LogInformation($"Sessão {sessao.Value.Id} criada com sucesso");
 
             return CreatedAtAction("RecuperarPorId", new { id = sessao.Value.Id }, sessao.Value.Id);
         }
@@ -97,6 +105,8 @@ namespace AplicacaoIngressos.WebApi.Controllers
             _sessoesRepositorio.Atualizar(sessao);
             await _sessoesRepositorio.Commit(cancellationToken);
 
+            _logger.LogInformation($"Sessão {sessao.Id} atualizada com sucesso");
+
             return Ok(sessao);
         }
 
@@ -113,6 +123,8 @@ namespace AplicacaoIngressos.WebApi.Controllers
 
             _sessoesRepositorio.Remover(sessao);
             await _sessoesRepositorio.Commit(cancellationToken);
+
+            _logger.LogInformation($"Sessão {sessao.Id} removida com sucesso");
 
             return Ok("Sessão foi removida com sucesso!");
         }
