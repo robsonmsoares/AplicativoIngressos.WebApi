@@ -14,10 +14,12 @@ namespace AplicacaoIngressos.WebApi.Controllers
     public class SessoesController : ControllerBase
     {
         private readonly SessoesRepositorio _sessoesRepositorio;
+        private readonly FilmesRepositorio _filmesRepositorio;
 
-        public SessoesController(SessoesRepositorio sessoesRepositorio)
+        public SessoesController(SessoesRepositorio sessoesRepositorio, FilmesRepositorio filmesRepositorio)
         {
             _sessoesRepositorio = sessoesRepositorio;
+            _filmesRepositorio = filmesRepositorio;
         }
 
         [HttpGet("{id}")]
@@ -82,6 +84,13 @@ namespace AplicacaoIngressos.WebApi.Controllers
             var sessao = await _sessoesRepositorio.RecuperarPorId(guid, cancellationToken);
 
             if (sessao == null)
+                return NotFound();
+
+            if (!Guid.TryParse(atualizarSessaoInputModel.FilmeId, out var filmeId))
+                return BadRequest("ID não pôde ser convertido");
+
+            var filme = await _filmesRepositorio.RecuperarPorId(filmeId, cancellationToken);
+            if (filme == null)
                 return NotFound();
 
             sessao.Atualizar(atualizarSessaoInputModel);

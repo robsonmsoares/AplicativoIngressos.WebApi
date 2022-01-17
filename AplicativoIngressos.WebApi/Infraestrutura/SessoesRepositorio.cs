@@ -20,7 +20,9 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
         {
             return await _dbContext
                             .Sessoes
+                            .Include(c => c.Ingressos)
                             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+
         }
 
         public async Task<IEnumerable<Sessao>> RecuperarTodas(CancellationToken cancellationToken = default)

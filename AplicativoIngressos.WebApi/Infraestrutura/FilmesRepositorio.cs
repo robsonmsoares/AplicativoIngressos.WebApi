@@ -20,6 +20,7 @@ namespace AplicacaoIngressos.WebApi.Infraestrutura
         {
             return await _dbContext
                             .Filmes
+                            .Include(filme => filme.Sessoes)
                             .FirstOrDefaultAsync(filme => filme.Id == id, cancellationToken);
         }
 

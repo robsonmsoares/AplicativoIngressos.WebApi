@@ -47,7 +47,13 @@ namespace AplicacaoIngressos.WebApi.Controllers
             if (!Guid.TryParse(novoIngressoInputModel.SessaoId, out var guid))
                 return BadRequest("ID da sessão não pôde ser convertido");
 
+            var sessao = await _sessoesRepositorio.RecuperarPorId(guid, cancellationToken);
+
+            if (sessao == null)
+                return NotFound();
+
             var ingressoSessao = await _sessoesRepositorio.RecuperarPorId(guid, cancellationToken);
+
             var ingressosVendidos = ingressoSessao.Ingressos.Select(x => x.Quantidade).Sum();
 
             if (ingressosVendidos == ingressoSessao.QuantidadeLugares)
